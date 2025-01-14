@@ -1,18 +1,18 @@
 # Sweet Tooth
-A MarcyLabSchool MOD4 Project
+A [MarcyLabSchool](https://www.marcylabschool.org/) MOD4 Project
 
 Contributors:
 - [Xavier Hertzog](https://github.com/XavMontana)
 - [Raffy Castillo](https://github.com/ffyruh)
 
-## Running the app (pending deployment)
+Check out our [progress](https://github.com/orgs/mod4-x-raffy/projects/1) and [project proposal](https://docs.google.com/document/d/1jRYgCxhGpyYj7ASElt9mzVcjRPSn7LSwShSDklsMiZM/edit?usp=sharing).
+
+## Running the app (_pending deployment_)
 1. Move to the app directory with `cd app`
 2. Install dependencies with `npm i`
 3. Run the app locally with `npm run dev`
 
-Check out our [progress](https://github.com/orgs/mod4-x-raffy/projects/1) and [project proposal](https://docs.google.com/document/d/1jRYgCxhGpyYj7ASElt9mzVcjRPSn7LSwShSDklsMiZM/edit?usp=sharing).
-
-## Endpoints Implemented:
+## Endpoints to Implement
 [The MealDB](https://www.themealdb.com/api.php)
 - Filter by category endpoint [Dessert] (https://themealdb.com/api/json/v1/1/filter.php?c=Dessert)
 - Lookup full meal details by id endpoint (https://themealdb.com/api/json/v1/1/lookup.php?i=52770)
@@ -31,7 +31,6 @@ Check out our [progress](https://github.com/orgs/mod4-x-raffy/projects/1) and [p
 - Users will be able to select a different category of recipes
 
 ## Wireframe
-
 <div align="center">
   <img src="images/frames.png" alt="wireframe" width="90%">
 </div>
