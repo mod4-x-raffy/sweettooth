@@ -5,6 +5,11 @@ Contributors:
 - [Xavier Hertzog](https://github.com/XavMontana)
 - [Raffy Castillo](https://github.com/ffyruh)
 
+## Running the app (pending deployment)
+1. Move to the app directory with `cd app`
+2. Install dependencies with `npm i`
+3. Run the app locally with `npm run dev`
+
 Check out our [progress](https://github.com/orgs/mod4-x-raffy/projects/1) and [project proposal](https://docs.google.com/document/d/1jRYgCxhGpyYj7ASElt9mzVcjRPSn7LSwShSDklsMiZM/edit?usp=sharing).
 
 ## Endpoints Implemented:
@@ -28,6 +33,6 @@ Check out our [progress](https://github.com/orgs/mod4-x-raffy/projects/1) and [p
 ## Wireframe
 
 <div align="center">
-  <img src="public/frames.png" alt="wireframe" width="90%">
+  <img src="images/frames.png" alt="wireframe" width="90%">
 </div>
 
