@@ -14,8 +14,8 @@ Check out our [progress](https://github.com/orgs/mod4-x-raffy/projects/1) and [p
 
 ## Endpoints to Implement
 [The MealDB](https://www.themealdb.com/api.php)
-- Filter by category endpoint [Dessert] (https://themealdb.com/api/json/v1/1/filter.php?c=Dessert)
-- Lookup full meal details by id endpoint (https://themealdb.com/api/json/v1/1/lookup.php?i=52770)
+- Filter by category endpoint [Dessert] (https://themealdb.com/api/json/v1/1/filter.php?c={category})
+- Lookup full meal details by id endpoint (https://themealdb.com/api/json/v1/1/lookup.php?i={id})
 
 ## User Stories
 
