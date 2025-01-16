@@ -13,7 +13,9 @@ ul {
   list-style: none;
 }
 img {
-  width: 100%;
+  border: 2px solid red;
+  border-radius: 8px;
+  width: 200px;
 }
 
 header {
@@ -27,9 +29,35 @@ header {
   height: 2.75rem;
   align-items: center;
 }
-
-section {
+section#img {
   padding-top: 2.75rem;
+  height: auto;
+  width: 100%;
 }
 
-section
+ul#dish-catalog {
+  display: flex;
+  gap: 5rem;
+  flex-wrap: wrap;
+  text-align: center;
+  justify-content: space-around;
+  word-wrap: break-word;
+  font-size: large;
+  font-weight: bold;
+}
+
+li {
+  width: 13rem;
+}
+
+section#recipe-of-the-day {
+  padding-top: 5rem;
+  padding-bottom: 3rem;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+}
+
+section > img {
+  width: 30%;
+}
