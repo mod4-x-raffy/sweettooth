@@ -18,7 +18,7 @@ img {
   width: 200px;
 }
 
-header {
+nav {
   color: white;
   width: 100%;
   background-color: darksalmon;
@@ -114,6 +114,11 @@ div#steps-div {
   display: flex;
   flex-grow: 5;
   flex-direction: column;
+}
+
+.collapsed {
+  visibility: collapse;
+  max-height: 0;
 }
 
 ol > li {
