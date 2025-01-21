@@ -152,4 +152,13 @@ const renderSingleRecipe = (recipeData) => {
   main.append(recipe);
 };
 
-export { renderAllRecipes, renderRecipeOfDay, renderSingleRecipe };
+// TODO: render error toast
+const renderErrorToast = () => {
+
+}
+
+export {
+  renderAllRecipes,
+  renderRecipeOfDay,
+  renderSingleRecipe
+};
