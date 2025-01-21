@@ -18,7 +18,7 @@ const renderAllRecipes = (allRecipes) => {
 };
 
 const renderRecipeOfDay = (recipe) => {
-  const section = document.querySelector("section#recipe-of-the-day");
+  const section = document.querySelector("section#recipe-banner");
 
   const h1 = document.createElement("h1");
   h1.textContent = `Recipe of the day: ${recipe.strMeal}`;
@@ -30,4 +30,28 @@ const renderRecipeOfDay = (recipe) => {
   section.append(img, h1);
 };
 
-export { renderAllRecipes, renderRecipeOfDay };
+const renderSingleRecipe = (recipeData) => {
+  const main = document.querySelector('main');
+  main.innerHTML = '';
+  
+  // -------------- BANNER -------------- //
+  const banner = document.createElement('section');
+  banner.id = 'recipe-banner';
+
+  const foodImg = document.createElement('img');
+  foodImg.src = recipeData.meals[0].strMealThumb;
+  foodImg.alt = recipeData.meals[0].strMeal;
+
+  // TODO: Recipe banner background image
+  // idk yet maybe same image but with offset, blur
+  // monochrome, and whatever the fuck else 
+  // i'm usually supposed to do here
+  // const backImg = document.createElement('img');
+
+  // finalize banner section
+  // banner.append(backImg, foodImg);
+  banner.append(foodImg);
+  main.append(banner);
+}
+
+export { renderAllRecipes, renderRecipeOfDay, renderSingleRecipe };
