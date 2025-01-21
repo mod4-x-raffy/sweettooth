@@ -160,5 +160,6 @@ const renderErrorToast = () => {
 export {
   renderAllRecipes,
   renderRecipeOfDay,
-  renderSingleRecipe
+  renderSingleRecipe,
+  renderErrorToast
 };
