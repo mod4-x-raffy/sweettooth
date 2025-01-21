@@ -1,5 +1,6 @@
 const renderAllRecipes = (allRecipes) => {
   const recipesUL = document.querySelector("ul#dish-catalog");
+  recipesUL.innerHTML = '';
 
   allRecipes.meals.forEach((recipe) => {
     const li = document.createElement("li");
@@ -19,6 +20,11 @@ const renderAllRecipes = (allRecipes) => {
 
 const renderRecipeOfDay = (recipe) => {
   const section = document.querySelector("section#recipe-banner");
+  section.innerHTML = '';
+
+  const div = document.createElement('div');
+  div.id = 'recipe-banner';
+  div.dataset.idMeal = recipe.idMeal;
 
   const h1 = document.createElement("h1");
   h1.textContent = `Recipe of the day: ${recipe.strMeal}`;
@@ -27,7 +33,8 @@ const renderRecipeOfDay = (recipe) => {
   img.src = recipe.strMealThumb;
   img.alt = recipe.strMeal;
 
-  section.append(img, h1);
+  div.append(img, h1);
+  section.append(div);
 };
 
 const renderSingleRecipe = (recipeData) => {
@@ -54,7 +61,7 @@ const renderSingleRecipe = (recipeData) => {
 
   // finalize banner section
   // banner.append(backImg, foodImg);
-  banner.append(foodImg);
+  banner.append(foodImg, h1);
   main.append(banner);
 
   // -------------- INGREDIENTS -------------- //

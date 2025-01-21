@@ -95,7 +95,7 @@ div#ingredients-div > ul {
   align-items: flex-end;
 }
 
-li > p {
+div#ingredients-idv p {
   display: flex;
   justify-content: right;
   gap: 0.25rem;
