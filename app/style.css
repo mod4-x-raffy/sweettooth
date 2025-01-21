@@ -65,3 +65,59 @@ section#recipe-banner {
 section > img {
   width: 30%;
 }
+
+/* details page styles */
+/* TODO: Detailed page styles */
+
+section#recipe-banner {
+  padding-top: 2.75rem;
+  height: auto;
+  width: 100%;
+}
+
+section#recipe-details {
+  display: flex;
+  padding-left: 25%;
+}
+
+div#ingredients-div {
+  flex-grow: 1;
+}
+
+div#ingredients-div > h2 {
+  display: flex;
+  justify-content: right;
+}
+
+div#ingredients-div > ul {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+li > p {
+  display: flex;
+  justify-content: right;
+  gap: 0.25rem;
+}
+
+span.item {
+  font-weight: bold;
+}
+
+div#recipe-divider {
+  width: 2rem;
+  background-color: white;
+}
+
+div#steps-div {
+  display: flex;
+  flex-grow: 5;
+  flex-direction: column;
+}
+
+ol > li {
+  display: flex;
+  justify-content: left;
+  gap: 0.25rem;
+}
