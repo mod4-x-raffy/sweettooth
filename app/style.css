@@ -13,7 +13,7 @@ ul {
   list-style: none;
 }
 img {
-  border: 2px solid red;
+  border: 2px dashed white;
   border-radius: 8px;
   width: 200px;
 }
@@ -21,7 +21,7 @@ img {
 header {
   color: white;
   width: 100%;
-  background-color: black;
+  background-color: darksalmon;
   position: fixed;
   display: flex;
   padding: 0.5rem 1rem;
@@ -44,6 +44,8 @@ ul#dish-catalog {
   word-wrap: break-word;
   font-size: large;
   font-weight: bold;
+  background-color: darksalmon;
+  color: white;
 }
 
 li {
@@ -56,6 +58,8 @@ section#recipe-of-the-day {
   justify-content: center;
   text-align: center;
   width: 100%;
+  background-color: darksalmon;
+  color: white;
 }
 
 section > img {
