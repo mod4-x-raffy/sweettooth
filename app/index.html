@@ -1,13 +1,32 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
     <title>Sweet Tooth</title>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app">
+      <header>
+        <h2>Sweet Tooth</h2>
+        <button>Menu</button>
+      </header>
+      <main>
+        <section id="recipe-of-the-day">
+          <!-- item here will be handled in js -->
+        </section>
+        <section id="recipe-list">
+          <ul id="dish-catalog">
+            <!-- item here will be handled in js -->
+          </ul>
+          <div id="button-div">
+            <button id="load-more"></button>
+          </div>
+        </section>
+      </main>
+    </div>
     <script type="module" src="/main.js"></script>
   </body>
 </html>

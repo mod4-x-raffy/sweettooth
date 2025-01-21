@@ -4,7 +4,8 @@
   margin: 0;
   padding: 0;
 }
-a,p {
+a,
+p {
   margin: 0;
   padding: 0;
 }
@@ -12,7 +13,55 @@ ul {
   list-style: none;
 }
 img {
+  border: 2px dashed white;
+  border-radius: 8px;
+  width: 200px;
+}
+
+header {
+  color: white;
+  width: 100%;
+  background-color: darksalmon;
+  position: fixed;
+  display: flex;
+  padding: 0.5rem 1rem;
+  justify-content: space-between;
+  height: 2.75rem;
+  align-items: center;
+}
+section#img {
+  padding-top: 2.75rem;
+  height: auto;
   width: 100%;
 }
 
+ul#dish-catalog {
+  display: flex;
+  gap: 5rem;
+  flex-wrap: wrap;
+  text-align: center;
+  justify-content: space-around;
+  word-wrap: break-word;
+  font-size: large;
+  font-weight: bold;
+  background-color: darksalmon;
+  color: white;
+}
 
+li {
+  width: 13rem;
+}
+
+section#recipe-of-the-day {
+  padding-top: 5rem;
+  padding-bottom: 3rem;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  background-color: darksalmon;
+  color: white;
+}
+
+section > img {
+  width: 30%;
+}
