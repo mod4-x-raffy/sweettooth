@@ -85,13 +85,15 @@ const randomURL = `https://themealdb.com/api/json/v1/1/random.php`
 //   }
 // };
 
+let categoriesList = {};
 const fetchAllCategories = async () => {
   try {
+    if (Object.keys(categoriesList).length !== 0) return categoriesList;
     const response = await fetch(categoriesURL);
     if (!response.ok) {
       throw new Error(`Error code ${response.status}`);
     }
-    const categoriesList = await response.json();
+    categoriesList = await response.json();
     console.log(categoriesList);
     return categoriesList;
   } catch (error) {
@@ -99,14 +101,16 @@ const fetchAllCategories = async () => {
   }
 }
 
+let categoriesItems = {};
 const fetchCategoryItems = async (category) => {
   try {
+    if (categoriesItems[category] !== undefined) return categoriesItems[category];
     const response = await fetch(categoryItemsURL+category);
     if (!response.ok) {
       throw new Error(`Error code ${response.status}`);
     }
-    const categoriesItems = await response.json();
-    return categoriesItems;
+    categoriesItems[category] = await response.json();
+    return categoriesItems[category];
   } catch (error) {
     console.warn(error);
   }

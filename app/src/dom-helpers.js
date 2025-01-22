@@ -14,7 +14,7 @@ const handleRecipeClick = async (event) => {
   const li = event.target.closest('li');
   if (li === null || li.classList.contains('category')) return;
 
-  if (li.classList.contains('category-items')) {
+  if (li.classList.contains('category-item')) {
     const recipeData = await fetchSingleRecipe(li.dataset.idMeal);
     renderSingleRecipe(recipeData);
   } else if (event.target.closest('button') !== null) {
@@ -151,6 +151,14 @@ const renderBlankSaved = () => {
 
 
 const renderLanding = async () => {
+  // PREFETCHING
+  // show loading before rendering anything
+  // buy time for all items to be grabbed from api
+  const categories = await fetchAllCategories();
+  for (const item of categories.meals) {
+    await fetchCategoryItems(item.strCategory);
+  }
+
   // if coming from details page.
   initLanding();
   await renderRecipeOfTheDay();
@@ -172,6 +180,9 @@ const renderLanding = async () => {
   const savedButton = document.querySelector('button#saved');
   savedButton.addEventListener('click', renderSaved);
 
+  const backButton = document.querySelector('button#main-menu');
+  backButton.addEventListener('click', rerenderLanding);
+
   // scroll to top smoothly
   window.scrollTo({
     top: 0,
@@ -184,7 +195,7 @@ const renderCategoryItems = async (contentDiv, categoryLI) => {
     const categoryItems = await fetchCategoryItems(categoryLI.dataset.category);
 
     const categoryItemsUL = document.createElement('ul');
-    categoryItemsUL.classList.add('category-items');
+    categoryItemsUL.classList.add('category-item');
     categoryItemsUL.addEventListener('click', handleRecipeClick);
 
     console.log(categoryItems);
@@ -296,6 +307,7 @@ const renderSingleRecipe = (recipeData) => {
   // -------------- BANNER -------------- //
   const banner = document.createElement("section");
   banner.id = "recipe-banner";
+  banner.dataset.idMeal = recipeData.meals[0].idMeal;
 
   const foodImg = document.createElement("img");
   foodImg.src = recipeData.meals[0].strMealThumb;
@@ -382,12 +394,15 @@ const renderSingleRecipe = (recipeData) => {
   stepsOl.id = "steps-ol";
   const stepsArr = recipeData.meals[0].strInstructions.split(/[\r\n]+/);
   stepsArr.forEach((step, index) => {
+    if (step === '') return;
+
     const li = document.createElement("li");
     const h3 = document.createElement("h3");
     const p = document.createElement("p");
 
+    const stepStart = step.search(/[a-zA-Z]/);
     h3.textContent = index + 1;
-    p.textContent = step;
+    p.textContent = step.slice(stepStart);
 
     // finalize list item
     li.append(h3, p);
