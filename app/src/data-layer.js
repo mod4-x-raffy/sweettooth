@@ -47,4 +47,8 @@ const searchRecipe = async (name) => {
   }
 }
 
-export { fetchAllRecipes, fetchSingleRecipe, searchRecipe };
+export {
+  fetchAllRecipes,
+  fetchSingleRecipe,
+  searchRecipe
+};
