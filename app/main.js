@@ -2,11 +2,12 @@ import {
   renderAllRecipes,
   renderRecipeOfDay,
   renderSingleRecipe,
+  renderErrorToast
 } from "/src/dom-helpers.js";
 import {
   fetchAllRecipes,
   fetchSingleRecipe,
-  searchRecipe,
+  searchRecipe
 } from "/src/data-layer.js";
 
 const handleRecipeClick = async (event) => {
@@ -33,14 +34,14 @@ const handleSearch = async (event) => {
   console.log(form.elements.dish.value);
   const recipeData = await searchRecipe(form.elements.dish.value);
   if (recipeData === null) {
-    renderErrorMessage();
+    renderErrorToast();
     return;
   }
   renderSingleRecipe(recipeData);
 };
 
-const initMain = () => {
-  const main = document.querySelector("main");
+const initLanding = () => {
+  const main = document.querySelector('main');
   main.innerHTML = `
     <section id="recipe-banner">
       <!-- item here will be handled in js -->
@@ -56,34 +57,35 @@ const initMain = () => {
     `;
 };
 
-const handleMainMenu = async () => {
-  if (document.querySelector("section#recipe-list") === null) initMain();
-  const allRecipes = await fetchAllRecipes();
-  renderAllRecipes(allRecipes);
-  const randomFood =
-    allRecipes.meals[Math.floor(Math.random() * allRecipes.meals.length)];
-  renderRecipeOfDay(randomFood);
+const rerenderLanding = async () => {
+  if (document.querySelector('section#recipe-list') === null) renderLanding();
+}
 
-  // attach listeners
-  const recipeOfTheDay = document.querySelector("section#recipe-banner");
-  recipeOfTheDay.addEventListener("click", handleBannerClick);
+const renderLanding = async () => {
+  // if coming from details page.
+    initLanding();
+    const allRecipes = await fetchAllRecipes();
+    renderAllRecipes(allRecipes);
+    const randomFood = allRecipes.meals[Math.floor(Math.random() * allRecipes.meals.length)];
+    renderRecipeOfDay(randomFood);
 
-  const recipesUL = document.querySelector("ul#dish-catalog");
-  console.log(recipesUL);
-  recipesUL.addEventListener("click", handleRecipeClick);
+    // attach listeners
+    const recipeOfTheDay = document.querySelector('section#recipe-banner');
+    recipeOfTheDay.addEventListener('click', handleBannerClick);
 
-  const searchBox = document.querySelector("form#search-box");
-  searchBox.addEventListener("submit", handleSearch);
+    const recipesUL = document.querySelector('ul#dish-catalog');
+    console.log(recipesUL)
+    recipesUL.addEventListener('click', handleRecipeClick);
 
-  //const mainMenuButton = document.querySelector("button#main-menu");
-  //mainMenuButton.addEventListener("click", handleMainMenu);
+    const searchBox = document.querySelector('form#search-box');
+    searchBox.addEventListener('submit', handleSearch);
 
-  const menuButton = document.querySelector("button#Main-Menu");
-  menuButton.addEventListener("click", handleMainMenu);
-};
+    const mainMenuButton = document.querySelector('button#main-menu');
+    mainMenuButton.addEventListener('click', rerenderLanding);
+}
 
-const main = async () => {
-  handleMainMenu();
+const main = () => {
+  renderLanding();
 };
 
 main();
