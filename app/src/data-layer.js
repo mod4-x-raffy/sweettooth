@@ -1,10 +1,49 @@
-// local storage implementations
+// -------------- LOCALSTORAGE -------------- //
 const setLocalStorage = (key, data) => {
   localStorage.setItem(key, JSON.stringify(data));
 }
 
 const getLocalStorage = (key) => {
   return JSON.parse(localStorage.getItem(key));
+}
+
+const initSaved = () => {
+  if (getLocalStorage('sweettooth-saved') === null) {
+    localStorage.setItem('sweettooth-saved', JSON.stringify({}));
+  }
+}
+
+const toggleSaved = (data) => {
+  initSaved();
+  const currentSaved = getLocalStorage('sweettooth-saved');
+  const idStr = String(data.idMeal);
+  console.log(currentSaved);
+  // if it exists, remove it
+  if (currentSaved[idStr] !== undefined) {
+    delete currentSaved[idStr];
+    setLocalStorage('sweettooth-saved', currentSaved);
+    return false;
+  // if it doesn't exist, add it
+  } else {
+    currentSaved[idStr] = {
+      strMeal: data.strMeal,
+      strMealThumb: data.strMealThumb
+    }
+    setLocalStorage('sweettooth-saved', currentSaved);
+    return true;
+  };
+}
+
+const checkSaved = (id) => {
+  initSaved();
+  const currentSaved = getLocalStorage('sweettooth-saved');
+  if (currentSaved[String(id)] !== undefined) return true;
+  return false;
+}
+
+const getSaved = () => {
+  initSaved();
+  return getLocalStorage('sweettooth-saved');
 }
 
 const categoriesURL = `https://themealdb.com/api/json/v1/1/list.php?c=list`
@@ -126,4 +165,7 @@ export {
   fetchAllCategories,
   fetchRandomRecipe,
   searchRecipe,
+  toggleSaved,
+  checkSaved,
+  getSaved
 }

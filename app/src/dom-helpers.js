@@ -2,17 +2,41 @@ import {
   fetchSingleRecipe,
   fetchCategoryItems,
   fetchAllCategories,
-  fetchRandomRecipe
+  fetchRandomRecipe,
+  searchRecipe,
+  toggleSaved,
+  checkSaved,
+  getSaved
 } from './data-layer.js'
 
 // -------------- EVENT HANDLERS -------------- //
 const handleRecipeClick = async (event) => {
   const li = event.target.closest('li');
   if (li === null || li.classList.contains('category')) return;
-  console.log(li.dataset.idMeal);
 
-  const recipeData = await fetchSingleRecipe(li.dataset.idMeal);
-  renderSingleRecipe(recipeData);
+  if (li.classList.contains('category-items')) {
+    const recipeData = await fetchSingleRecipe(li.dataset.idMeal);
+    renderSingleRecipe(recipeData);
+  } else if (event.target.closest('button') !== null) {
+
+    // toggle the item in localstore
+    const img = li.querySelector('img');
+    const isSaved = toggleSaved({
+      idMeal: li.dataset.idMeal,
+      strMeal: img.alt,
+      strMealThumb: img.src
+    });
+
+    const ul = event.target.closest('ul');
+    if (ul.id === 'saved-list') {
+      ul.removeChild(li);
+    } else {
+      // if this happens anywhere but the SAVED screen
+      // render the button differently afterwards
+      const button = li.querySelector('button');
+      button.textContent = (isSaved) ? 'Unsave' : 'Save';
+    }
+  }
 }
 
 const handleBannerClick = async (event) => {
@@ -24,12 +48,13 @@ const handleBannerClick = async (event) => {
   renderSingleRecipe(recipeData);
 }
 
+// TODO: Error handling
 const handleSearch = async (event) => {
   event.preventDefault();
   const form = event.target;
   console.log(form.elements.dish.value);
   const recipeData = await searchRecipe(form.elements.dish.value);
-  form.clear(); // TODO: confirm if this works
+  form.reset();
   if (recipeData === null) {
     renderErrorToast();
     return;
@@ -49,7 +74,6 @@ const handleCategoryExpand = async (event) => {
   const div = event.target.closest('div');
   if (!div.classList.contains('category-header')) return;
 
-  // TODO: Expand this category
   const contentDiv = div.nextElementSibling;
   if (contentDiv.classList.contains('collapsed')) collapseAllCategories();
   const categoryLI = event.target.closest('li');
@@ -60,54 +84,71 @@ const handleCategoryExpand = async (event) => {
   }
 
   if (contentDiv.innerHTML.trim() === '') {
-    console.log(contentDiv.innerHTML);
-    const categoryItems = await fetchCategoryItems(categoryLI.dataset.category);
-
-    const categoryItemsUL = document.createElement('ul');
-    categoryItemsUL.classList.add('category-items');
-    categoryItemsUL.addEventListener('click', handleRecipeClick);
-
-    console.log(categoryItems);
-    for (const [index, recipe] of categoryItems.meals.entries()) {
-      const li = document.createElement('li');
-      li.id = index;
-      li.dataset.idMeal = recipe.idMeal;
-      li.classList.add('category-item')
-      // TODO: not sure about this one
-      // li.dataset.category = categoryLI.dataset.category;
-
-      const img = document.createElement('img');
-      img.src = recipe.strMealThumb;
-      img.alt = recipe.strMeal;
-
-      const p = document.createElement("p");
-      p.textContent = recipe.strMeal;
-
-      li.append(img, p);
-      categoryItemsUL.append(li);
-    }
-
-    contentDiv.append(categoryItemsUL);
+    renderCategoryItems(contentDiv, categoryLI);
   }
-  console.log(contentDiv.classList);
   contentDiv.classList.remove('collapsed');
-  console.log(contentDiv.classList);
 }
 
 // -------------- RENDER FUNCS -------------- //
 const initLanding = () => {
   const main = document.querySelector('main');
   main.innerHTML = `
-<section id="recipe-banner">
-  <!-- item here will be handled in js -->
-</section>
-<section id="categories-section">
-  <ul id="categories-list">
-    <!-- items here will be handled in js -->
-  </ul>
-</section>
-`;
+    <section id="recipe-banner">
+      <!-- item here will be handled in js -->
+    </section>
+    <section id="categories-section">
+      <ul id="categories-list">
+        <!-- items here will be handled in js -->
+      </ul>
+    </section>
+  `;
 }
+
+const renderSaved = () => {
+  const saved = getSaved();
+  // NOTE: might not need this anymore
+  // if (Object.keys(saved).length === 0) {
+  //   renderBlankSaved();
+  //   return;
+  // }
+  const main = document.querySelector('main');
+  main.innerHTML = '';
+
+  const h1 = document.createElement('h1');
+  h1.textContent = 'Saved Recipes';
+
+  const ul = document.createElement('ul');
+  ul.id = 'saved-list';
+  ul.addEventListener('click', handleRecipeClick);
+
+  let i = 0;
+  for (const [key, value] of Object.entries(saved)) {
+    const li = document.createElement('li');
+    li.id = i++;
+    li.dataset.idMeal = key;
+    li.classList.add('category-item');
+
+    const img = document.createElement('img');
+    img.src = value.strMealThumb;
+    img.alt = value.strMeal;
+
+    const p = document.createElement('p');
+    p.textContent = value.strMeal;
+
+    const button = document.createElement('button');
+    // conditional to check if saved and render differently
+    button.textContent = 'Unsave';
+
+    li.append(img, p, button);
+    ul.append(li);
+  }
+  main.append(h1, ul);
+}
+
+const renderBlankSaved = () => {
+
+}
+
 
 const renderLanding = async () => {
   // if coming from details page.
@@ -122,11 +163,14 @@ const renderLanding = async () => {
   const searchBox = document.querySelector('form#search-box');
   searchBox.addEventListener('submit', handleSearch);
 
-  const mainMenuButton = document.querySelector('button#main-menu');
-  mainMenuButton.addEventListener('click', rerenderLanding);
+  const mainMenuButton = document.querySelector('button#saved');
+  mainMenuButton.addEventListener('click', renderSaved);
 
   const categoriesListUL = document.querySelector('ul#categories-list');
   categoriesListUL.addEventListener('click', handleCategoryExpand)
+
+  const savedButton = document.querySelector('button#saved');
+  savedButton.addEventListener('click', renderSaved);
 
   // scroll to top smoothly
   window.scrollTo({
@@ -135,11 +179,38 @@ const renderLanding = async () => {
   })
 }
 
-const renderCategoryItems = async () => {
-  // TODO:
-  // 1. fetch all items from this category
-  // 2. append the data
-  // 3. maybe render?
+const renderCategoryItems = async (contentDiv, categoryLI) => {
+    console.log(contentDiv.innerHTML);
+    const categoryItems = await fetchCategoryItems(categoryLI.dataset.category);
+
+    const categoryItemsUL = document.createElement('ul');
+    categoryItemsUL.classList.add('category-items');
+    categoryItemsUL.addEventListener('click', handleRecipeClick);
+
+    console.log(categoryItems);
+    for (const [index, recipe] of categoryItems.meals.entries()) {
+      const li = document.createElement('li');
+      li.id = index;
+      li.dataset.idMeal = recipe.idMeal;
+      li.classList.add('category-item')
+      // NOTE: not sure about this one
+      // li.dataset.category = categoryLI.dataset.category;
+
+      const img = document.createElement('img');
+      img.src = recipe.strMealThumb;
+      img.alt = recipe.strMeal;
+
+      const p = document.createElement('p');
+      p.textContent = recipe.strMeal;
+
+      const button = document.createElement('button');
+      // conditional to check if saved and render differently
+      button.textContent = checkSaved(recipe.idMeal) ? 'Unsave' : 'Save';
+
+      li.append(img, p, button);
+      categoryItemsUL.append(li);
+    }
+    contentDiv.append(categoryItemsUL);
 }
 
 const renderAllCategories = async () => {
@@ -230,9 +301,6 @@ const renderSingleRecipe = (recipeData) => {
   foodImg.src = recipeData.meals[0].strMealThumb;
   foodImg.alt = recipeData.meals[0].strMeal;
 
-  const h1 = document.createElement("h1");
-  h1.textContent = `${recipeData.meals[0].strMeal}`;
-
   // TODO: Recipe banner background image
   // idk yet maybe same image but with offset, blur
   // monochrome, and whatever the fuck else
@@ -241,7 +309,7 @@ const renderSingleRecipe = (recipeData) => {
 
   // finalize banner section
   // banner.append(backImg, foodImg);
-  banner.append(foodImg, h1);
+  banner.append(foodImg);
   main.append(banner);
 
   // -------------- INGREDIENTS -------------- //
