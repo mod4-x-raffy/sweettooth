@@ -8,7 +8,7 @@ import {
 // -------------- EVENT HANDLERS -------------- //
 const handleRecipeClick = async (event) => {
   const li = event.target.closest('li');
-  if (li === null) return;
+  if (li === null || li.classList.contains('category')) return;
   console.log(li.dataset.idMeal);
 
   const recipeData = await fetchSingleRecipe(li.dataset.idMeal);
@@ -65,11 +65,13 @@ const handleCategoryExpand = async (event) => {
 
     const categoryItemsUL = document.createElement('ul');
     categoryItemsUL.classList.add('category-items');
+    categoryItemsUL.addEventListener('click', handleRecipeClick);
 
     console.log(categoryItems);
     for (const [index, recipe] of categoryItems.meals.entries()) {
       const li = document.createElement('li');
       li.id = index;
+      li.dataset.idMeal = recipe.idMeal;
       li.classList.add('category-item')
       // TODO: not sure about this one
       // li.dataset.category = categoryLI.dataset.category;
@@ -108,8 +110,6 @@ const initLanding = () => {
 }
 
 const renderLanding = async () => {
-  // TODO: Refactor into showing categories instead
-
   // if coming from details page.
   initLanding();
   await renderRecipeOfTheDay();
@@ -127,6 +127,12 @@ const renderLanding = async () => {
 
   const categoriesListUL = document.querySelector('ul#categories-list');
   categoriesListUL.addEventListener('click', handleCategoryExpand)
+
+  // scroll to top smoothly
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  })
 }
 
 const renderCategoryItems = async () => {
@@ -142,6 +148,7 @@ const renderAllCategories = async () => {
   for (const [index, category] of categoriesList.meals.entries()) {
     const li = document.createElement('li');
     li.id = index;
+    li.classList.add('category');
     li.dataset.category = category.strCategory;
 
     // -------------- CATEGORY HEADER DIV -------------- //
@@ -169,25 +176,25 @@ const rerenderLanding = async () => {
   if (document.querySelector('section#categories-section') === null) renderLanding();
 }
 
-const renderAllRecipes = (allRecipes) => {
-  const recipesUL = document.querySelector("ul#dish-catalog");
-  recipesUL.innerHTML = '';
-
-  allRecipes.meals.forEach((recipe) => {
-    const li = document.createElement("li");
-    li.dataset.idMeal = recipe.idMeal;
-
-    const img = document.createElement("img");
-    img.src = recipe.strMealThumb;
-    img.alt = recipe.strMeal;
-
-    const p = document.createElement("p");
-    p.textContent = recipe.strMeal;
-
-    li.append(img, p);
-    recipesUL.append(li);
-  });
-};
+// const renderAllRecipes = (allRecipes) => {
+//   const recipesUL = document.querySelector("ul#dish-catalog");
+//   recipesUL.innerHTML = '';
+//
+//   allRecipes.meals.forEach((recipe) => {
+//     const li = document.createElement("li");
+//     li.dataset.idMeal = recipe.idMeal;
+//
+//     const img = document.createElement("img");
+//     img.src = recipe.strMealThumb;
+//     img.alt = recipe.strMeal;
+//
+//     const p = document.createElement("p");
+//     p.textContent = recipe.strMeal;
+//
+//     li.append(img, p);
+//     recipesUL.append(li);
+//   });
+// };
 
 const renderRecipeOfTheDay = async () => {
   let recipeData = await fetchRandomRecipe();
@@ -323,6 +330,12 @@ const renderSingleRecipe = (recipeData) => {
   recipe.append(stepsDiv);
 
   main.append(recipe);
+
+  // scroll to top smoothly
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  })
 };
 
 // TODO: Render Error Toast
@@ -333,7 +346,6 @@ const renderErrorToast = () => {
 
 export {
   renderLanding,
-  renderAllRecipes,
   renderSingleRecipe,
   renderErrorToast
 };
