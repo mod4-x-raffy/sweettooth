@@ -12,6 +12,42 @@ p {
 ul {
   list-style: none;
 }
+
+button#Main-Menu {
+  background-color: #e9967a;
+  border: solid;
+  border-radius: 50%;
+  color: white;
+  padding: 16px 22px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 24px;
+  transition-duration: 0.4s;
+}
+
+button#Main-Menu:hover {
+  background-color: white;
+  color: darksalmon;
+}
+
+button#search {
+  background-color: #e9967a;
+  border: none;
+  color: white;
+  padding: 16px 22px;
+  text-align: center;
+  text-decoration: underline;
+  display: inline-block;
+  font-size: 16px;
+  transition-duration: 0.4s;
+}
+
+button#search:hover {
+  background-color: white;
+  color: darksalmon;
+}
+
 img {
   border: 2px dashed white;
   border-radius: 8px;

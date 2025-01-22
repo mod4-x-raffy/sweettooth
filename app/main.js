@@ -11,22 +11,22 @@ import {
 } from "/src/data-layer.js";
 
 const handleRecipeClick = async (event) => {
-  const li = event.target.closest('li');
+  const li = event.target.closest("li");
   if (li === null) return;
   console.log(li.dataset.idMeal);
 
   const recipeData = await fetchSingleRecipe(li.dataset.idMeal);
   renderSingleRecipe(recipeData);
-}
+};
 
 const handleBannerClick = async (event) => {
-  const div = event.target.closest('div');
+  const div = event.target.closest("div");
   if (div === null) return;
   console.log(div.dataset.idMeal);
 
   const recipeData = await fetchSingleRecipe(div.dataset.idMeal);
   renderSingleRecipe(recipeData);
-}
+};
 
 const handleSearch = async (event) => {
   event.preventDefault();
@@ -38,7 +38,7 @@ const handleSearch = async (event) => {
     return;
   }
   renderSingleRecipe(recipeData);
-}
+};
 
 const initLanding = () => {
   const main = document.querySelector('main');
@@ -55,7 +55,7 @@ const initLanding = () => {
       </div>
     </section>
     `;
-}
+};
 
 const rerenderLanding = async () => {
   if (document.querySelector('section#recipe-list') === null) renderLanding();
