@@ -13,7 +13,7 @@ ul {
   list-style: none;
 }
 
-button#Main-Menu {
+button#main-menu {
   background-color: #e9967a;
   border: solid;
   border-radius: 50%;
@@ -26,7 +26,7 @@ button#Main-Menu {
   transition-duration: 0.4s;
 }
 
-button#Main-Menu:hover {
+button#main-menu:hover {
   background-color: white;
   color: darksalmon;
 }
