@@ -8,6 +8,9 @@ import {
   checkSaved,
   getSaved
 } from './data-layer.js'
+import saveRecipeIco from '../etc/save-recipe.png';
+import unsaveRecipeIco from '../etc/unsave-recipe.png';
+import beansIco from '../etc/1920.png';
 
 // -------------- EVENT HANDLERS -------------- //
 const handleRecipeClick = async (event) => {
@@ -32,8 +35,8 @@ const handleRecipeClick = async (event) => {
       const button = li.querySelector('button');
       // conditional to check if saved and render differently
       const saveImg = button.querySelector('img');
-      saveImg.src = (!isSaved) ? 'images/save-recipe.png' : 'images/unsave-recipe.png'
-      saveImg.alt = (!isSaved) ? 'Unsave' : 'Save';
+      saveImg.src = (!isSaved) ? saveRecipeIco : unsaveRecipeIco
+      saveImg.alt = (isSaved) ? 'Unsave' : 'Save';
     }
     return;
   }
@@ -107,7 +110,7 @@ const initLanding = () => {
   main.innerHTML = `
     <div id='title-div'>
       <div>
-        <img src='images/1920.png' alt='Sweet Tooth'>
+        <img src='' alt='Sweet Tooth'>
       </div>
       <h1 id='landing'>
         Select a category
@@ -119,6 +122,9 @@ const initLanding = () => {
       </ul>
     </section>
   `;
+  const titleDiv = document.querySelector('div#title-div');
+  const logo = titleDiv.querySelector('img');
+  logo.src = beansIco;
 }
 
 const renderSaved = () => {
@@ -157,8 +163,8 @@ const renderSaved = () => {
     const button = document.createElement('button');
     button.classList.add('save-recipe');
     const saveImg = document.createElement('img');
-    saveImg.src = (isSaved) ? 'images/save-recipe.png' : 'images/unsave-recipe.png'
-    saveImg.alt = (isSaved) ? 'Unsave' : 'Save';
+    saveImg.src = (isSaved) ? saveRecipeIco : unsaveRecipeIco
+    saveImg.alt = (!isSaved) ? 'Unsave' : 'Save';
     button.append(saveImg);
 
     li.append(img, p, button);
@@ -177,7 +183,7 @@ const renderFallback = (bool) => {
   main.innerHTML = '';
   const img = document.createElement('img');
   img.id = 'loading';
-  img.src = 'images/1920.png';
+  img.src = beansIco;
   img.alt = 'loading';
   main.append(img);
 }
@@ -263,8 +269,8 @@ const renderCategoryItems = async (contentDiv, categoryLI) => {
       const button = document.createElement('button');
       button.classList.add('save-recipe');
       const saveImg = document.createElement('img');
-      saveImg.src = (!isSaved) ? 'images/save-recipe.png' : 'images/unsave-recipe.png'
-      saveImg.alt = (!isSaved) ? 'Unsave' : 'Save';
+      saveImg.src = (!isSaved) ? saveRecipeIco : unsaveRecipeIco
+      saveImg.alt = (isSaved) ? 'Unsave' : 'Save';
       button.append(saveImg);
 
       li.append(img, p, button);
@@ -475,7 +481,7 @@ const renderSingleRecipe = (recipeData) => {
   // add img logo cute
   const logo = document.createElement('img');
   logo.id = 'cute';
-  logo.src = 'images/1920.png';
+  logo.src = beansIco;
   logo.alt = 'Sweet Tooth';
 
   recipe.append(logo);
