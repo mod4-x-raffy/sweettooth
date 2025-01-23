@@ -2,8 +2,10 @@ import {
   renderLanding
 } from "/src/dom-helpers.js";
 
-const main = () => {
-  renderLanding();
+
+
+const main = async () => {
+  renderLanding(true);
 };
 
 main();

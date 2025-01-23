@@ -7,18 +7,32 @@
     <link rel="stylesheet" href="style.css" />
     <title>Sweet Tooth</title>
   </head>
-  <body>
+  <body class='init'>
+    <div id='floating-modal' class='picker'>
+      <ul id='areas-list'>
+        <!-- JS -->
+      </ul>
+    </div>
     <div id="app">
-      <nav>
-        <h2>Sweet Tooth</h2>
+      <nav class='init'>
+        <div id='main-menu-div'><button id='main-menu'><h2>Sweet Tooth</h2></button></div>
         <form id="search-box" aria-labelledby="search-box">
-          <input id="dish" type="text" name="dish" placeholder="Type any dish here!" />
-          <button>Search</button>
+          <input id="dish" type="text" name="dish" placeholder="Search" />
+          <button id='search'>
+            <img src='/etc/search.png' alt='Search'>
+          </button>
         </form>
-        <button id="main-menu">Back</button>
-        <button id="saved">Saved</button>
+        <div id='save-div'>
+          <button id="saved">
+            <p>Favorites</p>
+            <img src='/etc/view-saved.png' alt='Saved Recipes'>
+          </button>
+        </div>
       </nav>
+      <!-- <svg width="24px" height="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 4C9.243 4 7 6.243 7 9h2c0-1.654 1.346-3 3-3s3 1.346 3 3c0 1.069-.454 1.465-1.481 2.255-.382.294-.813.626-1.226 1.038C10.981 13.604 10.995 14.897 11 15v2h2v-2.009c0-.024.023-.601.707-1.284.32-.32.682-.598 1.031-.867C15.798 12.024 17 11.1 17 9c0-2.757-2.243-5-5-5zm-1 14h2v2h-2z"/></svg> -->
       <main>
+        <div id='map-container'>
+        </div>
         <!-- js will init/handle this -->
       </main>
     </div>

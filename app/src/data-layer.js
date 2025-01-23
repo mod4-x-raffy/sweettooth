@@ -1,3 +1,5 @@
+import { renderErrorToast } from "./dom-helpers";
+
 // -------------- LOCALSTORAGE -------------- //
 const setLocalStorage = (key, data) => {
   localStorage.setItem(key, JSON.stringify(data));
@@ -47,10 +49,13 @@ const getSaved = () => {
 }
 
 const categoriesURL = `https://themealdb.com/api/json/v1/1/list.php?c=list`
+const areasURL = `https://themealdb.com/api/json/v1/1/list.php?a=list`
 const categoryItemsURL = `https://themealdb.com/api/json/v1/1/filter.php?c=`;
 const detailsURL = `https://themealdb.com/api/json/v1/1/lookup.php?i=`
 const searchURL = `https://themealdb.com/api/json/v1/1/search.php?s=`
 const randomURL = `https://themealdb.com/api/json/v1/1/random.php`
+const svgPath = '/assets/world.svg';
+
 
 // NOTE: API Endpoints
 // Search by name
@@ -71,6 +76,12 @@ const randomURL = `https://themealdb.com/api/json/v1/1/random.php`
 //   www.themealdb.com/api/json/v1/1/filter.php?a=${area}
 // Generate a single random meal
 //   https://www.themealdb.com/api/json/v1/1/random.php
+
+// NOTE: Recommendation Algo notes
+// Association rule learning
+//   https://en.wikipedia.org/wiki/Association_rule_learning
+// O'Reily Collective Intelligence
+//   https://www.svgator.com/blog/what-is-svg-interactivity
 
 // const fetchAllRecipes = async (category) => {
 //   try {
@@ -98,8 +109,10 @@ const fetchAllCategories = async () => {
     return categoriesList;
   } catch (error) {
     console.warn(error);
+    renderErrorToast(error);
   }
 }
+
 
 let categoriesItems = {};
 const fetchCategoryItems = async (category) => {
@@ -113,8 +126,10 @@ const fetchCategoryItems = async (category) => {
     return categoriesItems[category];
   } catch (error) {
     console.warn(error);
+    renderErrorToast(error);
   }
 }
+
 
 const fetchSingleRecipe = async (id) => {
   try {
@@ -127,6 +142,7 @@ const fetchSingleRecipe = async (id) => {
     return recipeData;
   } catch (error) {
     console.warn(error);
+    renderErrorToast(error);
   }
 }
 
@@ -141,6 +157,7 @@ const searchRecipe = async (name) => {
     return recipeData;
   } catch (error) {
     console.warn(error);
+    renderErrorToast(error);
     return null;
   }
 }
@@ -156,12 +173,14 @@ const fetchRandomRecipe = async () => {
     return recipeData;
   } catch (error) {
     console.warn(error);
+    renderErrorToast(error);
     return null;
   }
 }
 
+// -------------- MAP FUNCTIONS -------------- //
+
 export {
-  // fetchAllRecipes,
   setLocalStorage,
   getLocalStorage,
   fetchSingleRecipe,

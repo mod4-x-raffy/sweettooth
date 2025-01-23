@@ -14,11 +14,7 @@ const handleRecipeClick = async (event) => {
   const li = event.target.closest('li');
   if (li === null || li.classList.contains('category')) return;
 
-  if (li.classList.contains('category-item')) {
-    const recipeData = await fetchSingleRecipe(li.dataset.idMeal);
-    renderSingleRecipe(recipeData);
-  } else if (event.target.closest('button') !== null) {
-
+  if (event.target.closest('button') !== null) {
     // toggle the item in localstore
     const img = li.querySelector('img');
     const isSaved = toggleSaved({
@@ -36,6 +32,12 @@ const handleRecipeClick = async (event) => {
       const button = li.querySelector('button');
       button.textContent = (isSaved) ? 'Unsave' : 'Save';
     }
+    return;
+  }
+
+  if (li.classList.contains('category-item')) {
+    const recipeData = await fetchSingleRecipe(li.dataset.idMeal);
+    renderSingleRecipe(recipeData);
   }
 }
 
@@ -54,6 +56,8 @@ const handleSearch = async (event) => {
   const form = event.target;
   console.log(form.elements.dish.value);
   const recipeData = await searchRecipe(form.elements.dish.value);
+  // TODO: should i check if recipe data is null?
+  // this actually falls on the API, but a failsafe woule be nice
   form.reset();
   if (recipeData === null) {
     renderErrorToast();
@@ -92,6 +96,11 @@ const handleCategoryExpand = async (event) => {
 // -------------- RENDER FUNCS -------------- //
 const initLanding = () => {
   const main = document.querySelector('main');
+  main.classList.add('init');
+  const nav = document.querySelector('nav');
+  nav.classList.remove('init');
+  const body = document.querySelector('body');
+  body.classList.remove('init');
   main.innerHTML = `
     <section id="recipe-banner">
       <!-- item here will be handled in js -->
@@ -106,7 +115,7 @@ const initLanding = () => {
 
 const renderSaved = () => {
   const saved = getSaved();
-  // NOTE: might not need this anymore
+  // TODO: uncomment once renderBlankSaved is done
   // if (Object.keys(saved).length === 0) {
   //   renderBlankSaved();
   //   return;
@@ -145,12 +154,26 @@ const renderSaved = () => {
   main.append(h1, ul);
 }
 
+// TODO: Render blank saved (if no saves yet)
 const renderBlankSaved = () => {
 
 }
 
+const renderFallback = (bool) => {
+  const main = document.querySelector('main');
+  main.innerHTML = '';
+  const img = document.createElement('img');
+  img.id = 'loading';
+  img.src = '../etc/1920.png';
+  img.alt = 'loading';
+  main.append(img);
+}
 
-const renderLanding = async () => {
+
+const renderLanding = async (first=false) => {
+  // render a fallback
+  if (first) renderFallback(true);
+
   // PREFETCHING
   // show loading before rendering anything
   // buy time for all items to be grabbed from api
@@ -163,6 +186,7 @@ const renderLanding = async () => {
   initLanding();
   await renderRecipeOfTheDay();
   await renderAllCategories();
+
 
   // attach listeners
   const recipeOfTheDay = document.querySelector('div#recipe-container');
@@ -182,6 +206,15 @@ const renderLanding = async () => {
 
   const backButton = document.querySelector('button#main-menu');
   backButton.addEventListener('click', rerenderLanding);
+
+  window.onscroll = () => {
+    const top = document.body.scrollTop + document.documentElement.scrollTop === 0;
+    if (top) {
+      document.querySelector('nav').classList.remove('init');
+    } else {
+      document.querySelector('nav').classList.add('init');
+    }
+  };
 
   // scroll to top smoothly
   window.scrollTo({
@@ -224,6 +257,8 @@ const renderCategoryItems = async (contentDiv, categoryLI) => {
     contentDiv.append(categoryItemsUL);
 }
 
+
+
 const renderAllCategories = async () => {
   const categoriesList = await fetchAllCategories();
   const categoriesListUL = document.querySelector('ul#categories-list')
@@ -255,7 +290,11 @@ const renderAllCategories = async () => {
 }
 
 const rerenderLanding = async () => {
-  if (document.querySelector('section#categories-section') === null) renderLanding();
+  if (document.querySelector('section#categories-section') === null) {
+    const main = document.querySelector('main');
+    main.classList.remove('detailed');
+    renderLanding();
+  }
 }
 
 // const renderAllRecipes = (allRecipes) => {
@@ -280,6 +319,8 @@ const rerenderLanding = async () => {
 
 const renderRecipeOfTheDay = async () => {
   let recipeData = await fetchRandomRecipe();
+  // TODO: should i check if recipe data is null?
+  // this actually falls on the API, but a failsafe woule be nice
   recipeData = recipeData.meals[0];
   const section = document.querySelector("section#recipe-banner");
   section.innerHTML = '';
@@ -303,21 +344,17 @@ const renderSingleRecipe = (recipeData) => {
   // grab and clear app container
   const main = document.querySelector("main");
   main.innerHTML = "";
+  main.classList.add('detailed');
 
   // -------------- BANNER -------------- //
   const banner = document.createElement("section");
+  banner.classList.add('detailed');
   banner.id = "recipe-banner";
   banner.dataset.idMeal = recipeData.meals[0].idMeal;
 
   const foodImg = document.createElement("img");
   foodImg.src = recipeData.meals[0].strMealThumb;
   foodImg.alt = recipeData.meals[0].strMeal;
-
-  // TODO: Recipe banner background image
-  // idk yet maybe same image but with offset, blur
-  // monochrome, and whatever the fuck else
-  // i'm usually supposed to do here
-  // const backImg = document.createElement('img');
 
   // finalize banner section
   // banner.append(backImg, foodImg);
@@ -327,6 +364,13 @@ const renderSingleRecipe = (recipeData) => {
   // -------------- INGREDIENTS -------------- //
   const recipe = document.createElement("section");
   recipe.id = "recipe-details";
+  
+  const h1Div = document.createElement('div');
+  h1Div.id = 'h1-div';
+  const h1 = document.createElement('h1');
+  h1.textContent = recipeData.meals[0].strMeal;
+  h1Div.append(h1);
+  recipe.append(h1Div);
 
   const ingredientsDiv = document.createElement("div");
   ingredientsDiv.id = "ingredients-div";
@@ -375,13 +419,13 @@ const renderSingleRecipe = (recipeData) => {
   ingredientsDiv.append(ingredientsH2, ingredientsUl);
   recipe.append(ingredientsDiv);
 
-  // -------------- DIVIDER -------------- //
-  // inside this thing is just a line divider or something
-  const recipeDivider = document.createElement("div");
-  recipeDivider.id = "recipe-divider";
-
-  // finalize divider
-  recipe.append(recipeDivider);
+  // // -------------- DIVIDER -------------- //
+  // // inside this thing is just a line divider or something
+  // const recipeDivider = document.createElement("div");
+  // recipeDivider.id = "recipe-divider";
+  //
+  // // finalize divider
+  // recipe.append(recipeDivider);
 
   // -------------- STEPS -------------- //
   const stepsDiv = document.createElement("div");
@@ -412,6 +456,14 @@ const renderSingleRecipe = (recipeData) => {
   stepsDiv.append(stepsH2, stepsOl);
   recipe.append(stepsDiv);
 
+  // add img logo cute
+  const logo = document.createElement('img');
+  logo.id = 'cute';
+  logo.src = '../etc/1920.png';
+  logo.alt = 'Sweet Tooth';
+
+  recipe.append(logo);
+
   main.append(recipe);
 
   // scroll to top smoothly
@@ -427,8 +479,12 @@ const renderErrorToast = () => {
 
 }
 
+// -------------- MAP RENDERS -------------- //
 export {
   renderLanding,
   renderSingleRecipe,
+  // renderAllAreas,
+  // renderMap,
+  // renderMapZoom,
   renderErrorToast
 };
