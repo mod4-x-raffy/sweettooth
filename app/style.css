@@ -19,11 +19,13 @@ img#loading {
   height: 100%;
 }
 img#cute {
-  width : 100%;
+  width: 100%;
 }
 
-html, body,
-div#app, main,
+html,
+body,
+div#app,
+main,
 div#map-container {
   height: 100%;
 }
@@ -79,11 +81,11 @@ section > img {
   width: 30%;
 }
 
-li>img {
+li > img {
   height: 5rem;
 }
 
-div.category-content>ul {
+div.category-content > ul {
   padding-top: 2rem;
   display: flex;
   justify-content: center;
@@ -114,13 +116,15 @@ li.category-item {
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
+  border: 5px solid black;
+  border-top: 2px;
 }
 
-li.category-item>p {
+li.category-item > p {
   text-align: center;
 }
 
-li.category-item>button {
+li.category-item > button {
   position: absolute;
   cursor: pointer;
   transform: translate(125%, -25%);
@@ -131,7 +135,7 @@ button.save-recipe {
   background: none;
 }
 
-button.save-recipe>img {
+button.save-recipe > img {
   height: 2rem;
   width: 2rem;
 }
@@ -144,7 +148,7 @@ ul#saved-list {
   gap: 0.5rem;
 }
 
-main>h1 {
+main > h1 {
   display: flex;
   justify-content: center;
   padding-top: 3rem;
@@ -155,7 +159,7 @@ div#title-div {
   padding-top: 0.75rem;
   display: flex;
 }
-div#title-div>div {
+div#title-div > div {
   width: 50%;
 }
 div#title-div img {
@@ -168,7 +172,6 @@ h1#landing {
   flex-wrap: wrap;
   justify-content: right;
 }
-
 
 /* details page styles */
 /* TODO: Detailed page styles */
@@ -192,11 +195,11 @@ div#h1-div {
   justify-content: left;
 }
 
-div#h1-div>h1 {
+div#h1-div > h1 {
   font-size: 60pt;
 }
 
-section#recipe-banner.detailed>img {
+section#recipe-banner.detailed > img {
   width: 100%;
 }
 
@@ -219,7 +222,6 @@ section#recipe-details::-webkit-scrollbar {
   width: 0;
   height: 0;
 }
-
 
 div#ingredients-div {
   width: 100%;
@@ -306,11 +308,10 @@ button#search {
   background: none;
 }
 
-button#search>img {
+button#search > img {
   height: 1rem;
   width: 1rem;
 }
-
 
 div#save-div {
   flex: 1;
@@ -325,16 +326,16 @@ button#saved {
   align-items: center;
   gap: 0.5rem;
 }
-button#saved>p:hover {
+button#saved > p:hover {
   color: white;
   background-color: black;
 }
-button#saved>p {
+button#saved > p {
   padding-bottom: 1px;
   font-weight: bold;
   font-size: 1rem;
 }
-button#saved>img {
+button#saved > img {
   height: 1.5rem;
   width: 1.5rem;
 }
