@@ -28,10 +28,6 @@ div#map-container {
   height: 100%;
 }
 
-/*div {*/
-/*  transition: <property> <duration> <timing-function> <delay>;*/
-/*}*/
-/**/
 nav {
   color: black;
   width: 100%;
@@ -200,10 +196,6 @@ div#h1-div>h1 {
   font-size: 60pt;
 }
 
-
-
-
-
 section#recipe-banner.detailed>img {
   width: 100%;
 }
@@ -284,45 +276,7 @@ button#main-menu {
   border: none;
   background: none;
 }
-/*button#main-menu {*/
-/*  background-color: #e9967a;*/
-/*  border: solid;*/
-/*  border-radius: 50%;*/
-/*  color: white;*/
-/*  padding: 16px 22px;*/
-/*  text-align: center;*/
-/*  text-decoration: none;*/
-/*  display: inline-block;*/
-/*  font-size: 24px;*/
-/*  transition-duration: 0.4s;*/
-/*}*/
-/*button#main-menu:hover {*/
-/*  background-color: white;*/
-/*  color: darksalmon;*/
-/*}*/
-/*button#search {*/
-/*  background-color: #e9967a;*/
-/*  border: none;*/
-/*  color: white;*/
-/*  padding: 16px 22px;*/
-/*  text-align: center;*/
-/*  text-decoration: underline;*/
-/*  display: inline-block;*/
-/*  font-size: 16px;*/
-/*  transition-duration: 0.4s;*/
-/*}*/
-/*button#search:hover {*/
-/*  background-color: white;*/
-/*  color: darksalmon;*/
-/*}*/
 
-        /*<form id="search-box" aria-labelledby="search-box">*/
-        /*  <input id="dish" type="text" name="dish" placeholder="Type any dish here!" />*/
-        /*  <button>*/
-        /*    <p>Saved</p>*/
-        /*    <img src='/etc/search.png' alt='Search'>*/
-        /*  </button>*/
-        /*</form>*/
 form#search-box {
   border-radius: 1rem;
   border-style: solid;
