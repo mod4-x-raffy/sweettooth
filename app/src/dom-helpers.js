@@ -30,7 +30,10 @@ const handleRecipeClick = async (event) => {
       // if this happens anywhere but the SAVED screen
       // render the button differently afterwards
       const button = li.querySelector('button');
-      button.textContent = (isSaved) ? 'Unsave' : 'Save';
+      // conditional to check if saved and render differently
+      const saveImg = button.querySelector('img');
+      saveImg.src = (!isSaved) ? '../etc/save-recipe.png' : '../etc/unsave-recipe.png'
+      saveImg.alt = (!isSaved) ? 'Unsave' : 'Save';
     }
     return;
   }
@@ -102,9 +105,14 @@ const initLanding = () => {
   const body = document.querySelector('body');
   body.classList.remove('init');
   main.innerHTML = `
-    <section id="recipe-banner">
-      <!-- item here will be handled in js -->
-    </section>
+    <div id='title-div'>
+      <div>
+        <img src='../etc/1920.png' alt='Sweet Tooth'>
+      </div>
+      <h1 id='landing'>
+        Select a category
+      </h1>
+    </div>
     <section id="categories-section">
       <ul id="categories-list">
         <!-- items here will be handled in js -->
@@ -144,9 +152,14 @@ const renderSaved = () => {
     const p = document.createElement('p');
     p.textContent = value.strMeal;
 
-    const button = document.createElement('button');
     // conditional to check if saved and render differently
-    button.textContent = 'Unsave';
+    const isSaved = checkSaved(value.idMeal);
+    const button = document.createElement('button');
+    button.classList.add('save-recipe');
+    const saveImg = document.createElement('img');
+    saveImg.src = (isSaved) ? '../etc/save-recipe.png' : '../etc/unsave-recipe.png'
+    saveImg.alt = (isSaved) ? 'Unsave' : 'Save';
+    button.append(saveImg);
 
     li.append(img, p, button);
     ul.append(li);
@@ -184,13 +197,12 @@ const renderLanding = async (first=false) => {
 
   // if coming from details page.
   initLanding();
-  await renderRecipeOfTheDay();
   await renderAllCategories();
 
 
   // attach listeners
-  const recipeOfTheDay = document.querySelector('div#recipe-container');
-  recipeOfTheDay.addEventListener('click', handleBannerClick);
+  // const recipeOfTheDay = document.querySelector('div#recipe-container');
+  // recipeOfTheDay.addEventListener('click', handleBannerClick);
 
   const searchBox = document.querySelector('form#search-box');
   searchBox.addEventListener('submit', handleSearch);
@@ -247,9 +259,13 @@ const renderCategoryItems = async (contentDiv, categoryLI) => {
       const p = document.createElement('p');
       p.textContent = recipe.strMeal;
 
+      const isSaved = checkSaved(recipe.idMeal);
       const button = document.createElement('button');
-      // conditional to check if saved and render differently
-      button.textContent = checkSaved(recipe.idMeal) ? 'Unsave' : 'Save';
+      button.classList.add('save-recipe');
+      const saveImg = document.createElement('img');
+      saveImg.src = (!isSaved) ? '../etc/save-recipe.png' : '../etc/unsave-recipe.png'
+      saveImg.alt = (!isSaved) ? 'Unsave' : 'Save';
+      button.append(saveImg);
 
       li.append(img, p, button);
       categoryItemsUL.append(li);
@@ -271,7 +287,7 @@ const renderAllCategories = async () => {
     // -------------- CATEGORY HEADER DIV -------------- //
     const headerDiv = document.createElement('div');
     headerDiv.classList.add('category-header');
-    const headerText = document.createElement('h3');
+    const headerText = document.createElement('h1');
     headerText.textContent = category.strCategory;
     // finalize header div 
     headerDiv.append(headerText);

@@ -83,6 +83,97 @@ section > img {
   width: 30%;
 }
 
+li>img {
+  height: 5rem;
+}
+
+div.category-content>ul {
+  padding-top: 2rem;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+li.category {
+  cursor: pointer;
+}
+
+button#main-menu:hover {
+  color: white;
+  background-color: black;
+}
+
+div.category-header:hover {
+  color: white;
+  background-color: black;
+}
+
+li.category-item {
+  cursor: pointer;
+  width: 10rem;
+  height: 10rem;
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+li.category-item>p {
+  text-align: center;
+}
+
+li.category-item>button {
+  position: absolute;
+  cursor: pointer;
+  transform: translate(125%, -25%);
+}
+
+button.save-recipe {
+  border: none;
+  background: none;
+}
+
+button.save-recipe>img {
+  height: 2rem;
+  width: 2rem;
+}
+
+ul#saved-list {
+  padding-top: 2rem;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+main>h1 {
+  display: flex;
+  justify-content: center;
+  padding-top: 3rem;
+  font-size: 60pt;
+}
+
+div#title-div {
+  padding-top: 0.75rem;
+  display: flex;
+}
+div#title-div>div {
+  width: 50%;
+}
+div#title-div img {
+  width: 100%;
+}
+h1#landing {
+  padding-top: 3rem;
+  font-size: 60pt;
+  width: 50%;
+  flex-wrap: wrap;
+  justify-content: right;
+}
+
+
 /* details page styles */
 /* TODO: Detailed page styles */
 
@@ -108,6 +199,9 @@ div#h1-div {
 div#h1-div>h1 {
   font-size: 60pt;
 }
+
+
+
 
 
 section#recipe-banner.detailed>img {
@@ -276,6 +370,10 @@ button#saved {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+button#saved>p:hover {
+  color: white;
+  background-color: black;
 }
 button#saved>p {
   padding-bottom: 1px;
