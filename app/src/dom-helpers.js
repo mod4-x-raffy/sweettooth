@@ -11,6 +11,7 @@ import {
 import saveRecipeIco from '../etc/save-recipe.png';
 import unsaveRecipeIco from '../etc/unsave-recipe.png';
 import beansIco from '../etc/1920.png';
+import beansOriginIco from '../etc/loading.jpeg';
 
 // -------------- EVENT HANDLERS -------------- //
 const handleRecipeClick = async (event) => {
@@ -183,7 +184,7 @@ const renderFallback = (bool) => {
   main.innerHTML = '';
   const img = document.createElement('img');
   img.id = 'loading';
-  img.src = beansIco;
+  img.src = beansOriginIco;
   img.alt = 'loading';
   main.append(img);
 }
