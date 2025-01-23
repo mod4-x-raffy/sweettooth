@@ -7,21 +7,22 @@
     <link rel="stylesheet" href="style.css" />
     <title>Sweet Tooth</title>
   </head>
-  <body>
     <div id="app">
-      <header>
-        <button id="main-menu">Sweet Tooth</button>
+      <nav class='init'>
+        <div id='main-menu-div'><button id='main-menu'><h2>Sweet Tooth</h2></button></div>
         <form id="search-box" aria-labelledby="search-box">
-          <input
-            id="dish"
-            type="text"
-            name="dish"
-            placeholder="Type any dish here!"
-          />
-          <button id="search">Search</button>
+          <input id="dish" type="text" name="dish" placeholder="Search" />
+          <button id='search'>
+            <img src='/etc/search.png' alt='Search'>
+          </button>
         </form>
-        <!--button id="main-menu">Main Menu</button-->
-      </header>
+        <div id='save-div'>
+          <button id="saved">
+            <p>Favorites</p>
+            <img src='/etc/view-saved.png' alt='Saved Recipes'>
+          </button>
+        </div>
+      </nav>
       <main>
         <!-- js will init/handle this -->
       </main>

@@ -1,5 +1,6 @@
 /* css resets */
 * {
+  font-family: Helvetica, Arial, sans-serif;
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -13,60 +14,51 @@ ul {
   list-style: none;
 }
 
-button#main-menu {
-  background-color: #e9967a;
-  border: solid;
-  border-radius: 50%;
-  color: white;
-  padding: 16px 22px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 24px;
-  transition-duration: 0.4s;
-}
-
-button#main-menu:hover {
-  background-color: white;
-  color: darksalmon;
-}
-
-button#search {
-  background-color: #e9967a;
-  border: none;
-  color: white;
-  padding: 16px 22px;
-  text-align: center;
-  text-decoration: underline;
-  display: inline-block;
-  font-size: 16px;
-  transition-duration: 0.4s;
-}
-
-button#search:hover {
-  background-color: white;
-  color: darksalmon;
-}
-
-img {
-  border: 2px dashed white;
-  border-radius: 8px;
-  width: 200px;
-}
-
-header {
-  color: white;
+img#loading {
   width: 100%;
-  background-color: darksalmon;
+  height: 100%;
+}
+img#cute {
+  width : 100%;
+}
+
+html, body,
+div#app, main,
+div#map-container {
+  height: 100%;
+}
+
+nav {
+  color: black;
+  width: 100%;
   position: fixed;
   display: flex;
   padding: 0.5rem 1rem;
   justify-content: space-between;
   height: 2.75rem;
   align-items: center;
+  opacity: 1;
+  transition: all 0.1s ease;
+}
+nav.init {
+  height: 0;
+  opacity: 0;
+}
+
+main.init {
+  padding: 2.75rem 20% 0 20%;
+  display: flex;
+  flex-direction: column;
+}
+main {
+  padding-top: 0;
+}
+main.detailed {
+  flex-direction: row;
+  padding: 2.75rem 10% 0 10%;
+  align-items: center;
 }
 section#img {
-  padding-top: 2.75rem;
   height: auto;
   width: 100%;
 }
@@ -80,21 +72,6 @@ ul#dish-catalog {
   word-wrap: break-word;
   font-size: large;
   font-weight: bold;
-  background-color: darksalmon;
-  color: white;
-}
-
-li {
-  width: 13rem;
-}
-
-section#recipe-banner {
-  padding-top: 5rem;
-  padding-bottom: 3rem;
-  justify-content: center;
-  text-align: center;
-  width: 100%;
-  background-color: darksalmon;
   color: white;
 }
 
@@ -102,22 +79,153 @@ section > img {
   width: 30%;
 }
 
+li>img {
+  height: 5rem;
+}
+
+div.category-content>ul {
+  padding-top: 2rem;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+li.category {
+  cursor: pointer;
+}
+
+button#main-menu:hover {
+  color: white;
+  background-color: black;
+}
+
+div.category-header:hover {
+  color: white;
+  background-color: black;
+}
+
+li.category-item {
+  cursor: pointer;
+  width: 10rem;
+  height: 10rem;
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+li.category-item>p {
+  text-align: center;
+}
+
+li.category-item>button {
+  position: absolute;
+  cursor: pointer;
+  transform: translate(125%, -25%);
+}
+
+button.save-recipe {
+  border: none;
+  background: none;
+}
+
+button.save-recipe>img {
+  height: 2rem;
+  width: 2rem;
+}
+
+ul#saved-list {
+  padding-top: 2rem;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+main>h1 {
+  display: flex;
+  justify-content: center;
+  padding-top: 3rem;
+  font-size: 60pt;
+}
+
+div#title-div {
+  padding-top: 0.75rem;
+  display: flex;
+}
+div#title-div>div {
+  width: 50%;
+}
+div#title-div img {
+  width: 100%;
+}
+h1#landing {
+  padding-top: 3rem;
+  font-size: 60pt;
+  width: 50%;
+  flex-wrap: wrap;
+  justify-content: right;
+}
+
+
 /* details page styles */
 /* TODO: Detailed page styles */
 
 section#recipe-banner {
-  padding-top: 2.75rem;
   height: auto;
   width: 100%;
 }
 
-section#recipe-details {
+section#recipe-banner.detailed {
+  flex: 1;
   display: flex;
-  padding-left: 25%;
+  justify-content: flex-start;
+  align-items: flex-start;
+  height: 85%;
 }
 
+div#h1-div {
+  width: 100%;
+  display: flex;
+  justify-content: left;
+}
+
+div#h1-div>h1 {
+  font-size: 60pt;
+}
+
+section#recipe-banner.detailed>img {
+  width: 100%;
+}
+
+section#recipe-details {
+  padding-left: 2rem;
+  height: 85%;
+  display: flex;
+  /*justify-content: center;*/
+  /*align-content: center;*/
+  flex-direction: column;
+  flex: 1;
+  gap: 0.5rem;
+  overflow-x: wrap;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+section#recipe-details::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+
 div#ingredients-div {
-  flex-grow: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 div#ingredients-div > h2 {
@@ -131,29 +239,102 @@ div#ingredients-div > ul {
   align-items: flex-end;
 }
 
-div#ingredients-idv p {
+div#ingredients-div p {
   display: flex;
-  justify-content: right;
-  gap: 0.25rem;
+  justify-content: flex-start;
+  gap: 0.5rem;
 }
 
 span.item {
   font-weight: bold;
 }
 
-div#recipe-divider {
-  width: 2rem;
-  background-color: white;
-}
-
 div#steps-div {
   display: flex;
-  flex-grow: 5;
   flex-direction: column;
+  gap: 0.5rem;
+}
+
+.collapsed {
+  visibility: collapse;
+  max-height: 0;
 }
 
 ol > li {
   display: flex;
   justify-content: left;
   gap: 0.25rem;
+}
+
+div#main-menu-div {
+  flex: 1;
+  display: flex;
+  justify-content: left;
+}
+button#main-menu {
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+form#search-box {
+  border-radius: 1rem;
+  border-style: solid;
+  padding: 5px 10px;
+  height: 2rem;
+  width: 25rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+input#dish {
+  flex: 1;
+  border-radius: 1rem;
+  border: none;
+}
+
+input#dish::placeholder {
+  margin-left: 2rem;
+}
+
+button#search {
+  cursor: pointer;
+  border-radius: 2rem;
+  border: none;
+  background: none;
+}
+
+button#search>img {
+  height: 1rem;
+  width: 1rem;
+}
+
+
+div#save-div {
+  flex: 1;
+  display: flex;
+  justify-content: right;
+}
+button#saved {
+  cursor: pointer;
+  border: none;
+  background: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+button#saved>p:hover {
+  color: white;
+  background-color: black;
+}
+button#saved>p {
+  padding-bottom: 1px;
+  font-weight: bold;
+  font-size: 1rem;
+}
+button#saved>img {
+  height: 1.5rem;
+  width: 1.5rem;
 }
