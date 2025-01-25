@@ -2,7 +2,7 @@ import {
   fetchSingleRecipe,
   fetchCategoryItems,
   fetchAllCategories,
-  fetchRandomRecipe,
+  // fetchRandomRecipe,
   searchRecipe,
   toggleSaved,
   checkSaved,
@@ -15,9 +15,13 @@ import beansOriginIco from '../etc/loading.jpeg';
 
 // -------------- EVENT HANDLERS -------------- //
 const handleRecipeClick = async (event) => {
+  // Ignore all clicks not made over list-items.
   const li = event.target.closest('li');
   if (li === null || li.classList.contains('category')) return;
 
+  // Enables un/saving of recipes
+  //   Currently, it is the only button under any given
+  //   `ul` in the app so this works just fine.
   if (event.target.closest('button') !== null) {
     // toggle the item in localstore
     const img = li.querySelector('img');
@@ -28,37 +32,33 @@ const handleRecipeClick = async (event) => {
     });
 
     const ul = event.target.closest('ul');
+    // If currently on Favorites screen,
+    //   Simply remove the element from the DOM.
     if (ul.id === 'saved-list') {
       ul.removeChild(li);
+    // If currently on the Landing page,
+    //   Re-render the button on top of the clicked
+    //   list item to reflect the opposite action.
+    //   i.e. saved icon <==> unsaved icon
     } else {
-      // if this happens anywhere but the SAVED screen
-      // render the button differently afterwards
       const button = li.querySelector('button');
-      // conditional to check if saved and render differently
       const saveImg = button.querySelector('img');
       saveImg.src = (!isSaved) ? saveRecipeIco : unsaveRecipeIco
       saveImg.alt = (isSaved) ? 'Unsave' : 'Save';
     }
-    return;
+    return; // guard clause
   }
 
+  // User clicks on a recipe,
+  //   This will render a detailed page for it.
   if (li.classList.contains('category-item')) {
     const recipeData = await fetchSingleRecipe(li.dataset.idMeal);
     renderSingleRecipe(recipeData);
   }
 }
 
-const handleBannerClick = async (event) => {
-  const div = event.target.closest('div');
-  if (div === null) return;
-  console.log(div.dataset.idMeal);
-
-  const recipeData = await fetchSingleRecipe(div.dataset.idMeal);
-  renderSingleRecipe(recipeData);
-}
-
-// TODO: Error handling
 const handleSearch = async (event) => {
+  // TODO: Error handling
   event.preventDefault();
   const form = event.target;
   console.log(form.elements.dish.value);
@@ -73,6 +73,37 @@ const handleSearch = async (event) => {
   renderSingleRecipe(recipeData);
 }
 
+// Renders the expansion of the selected category tab.
+const handleCategoryExpand = async (event) => {
+  const div = event.target.closest('div');
+  if (!div.classList.contains('category-header')) return;
+
+  // If this current category tab is collapsed,
+  //   Before expanding it, make sure that all other
+  //   category tabs are collapsed first.
+  const contentDiv = div.nextElementSibling;
+  if (contentDiv.classList.contains('collapsed')) collapseAllCategories();
+
+  // If this current category tab is expanded,
+  //   Simply handle the event by collapsing it instead.
+  const categoryLI = event.target.closest('li');
+  if (!contentDiv.classList.contains('collapsed')) {
+    contentDiv.classList.add('collapsed');
+    return;
+  }
+
+  // If this is the first expansion of this category tab,
+  //   Render it for the first time!
+  //   Subsequent collapses/expansions are just hiding the
+  //   already rendered elements.
+  if (contentDiv.innerHTML.trim() === '') {
+    renderCategoryItems(contentDiv, categoryLI);
+  }
+
+  contentDiv.classList.remove('collapsed');
+}
+
+// -------------- RENDER FUNCS -------------- //
 const collapseAllCategories = () => {
   const contentDivs = document.querySelectorAll('div.category-content');
   for (const div of contentDivs) {
@@ -81,26 +112,6 @@ const collapseAllCategories = () => {
   }
 }
 
-const handleCategoryExpand = async (event) => {
-  const div = event.target.closest('div');
-  if (!div.classList.contains('category-header')) return;
-
-  const contentDiv = div.nextElementSibling;
-  if (contentDiv.classList.contains('collapsed')) collapseAllCategories();
-  const categoryLI = event.target.closest('li');
-  console.log(contentDiv);
-  if (!contentDiv.classList.contains('collapsed')) {
-    contentDiv.classList.add('collapsed');
-    return;
-  }
-
-  if (contentDiv.innerHTML.trim() === '') {
-    renderCategoryItems(contentDiv, categoryLI);
-  }
-  contentDiv.classList.remove('collapsed');
-}
-
-// -------------- RENDER FUNCS -------------- //
 const initLanding = () => {
   const main = document.querySelector('main');
   main.classList.add('init');
@@ -110,12 +121,14 @@ const initLanding = () => {
   body.classList.remove('init');
   main.innerHTML = `
     <div id='title-div'>
-      <div>
+      <div id='hero-logo-div'>
         <img src='' alt='Sweet Tooth'>
       </div>
-      <h1 id='landing'>
-        Select a category
-      </h1>
+      <div id='hero-title-div'>
+        <h1>
+          Select a category
+        </h1>
+      </div>
     </div>
     <section id="categories-section">
       <ul id="categories-list">
@@ -137,6 +150,7 @@ const renderSaved = () => {
   // }
   const main = document.querySelector('main');
   main.innerHTML = '';
+  main.classList.remove('detailed');
 
   const h1 = document.createElement('h1');
   h1.textContent = 'Saved Recipes';
@@ -157,7 +171,9 @@ const renderSaved = () => {
     img.alt = value.strMeal;
 
     const p = document.createElement('p');
-    p.textContent = value.strMeal;
+    let temp = value.strMeal[0].toUpperCase();
+    temp += value.strMeal.slice(1).toLowerCase();
+    p.textContent = temp;
 
     // conditional to check if saved and render differently
     const isSaved = checkSaved(value.idMeal);
@@ -175,10 +191,15 @@ const renderSaved = () => {
 }
 
 // TODO: Render blank saved (if no saves yet)
+// fallback message to say that there's nothing here yet
 const renderBlankSaved = () => {
 
 }
 
+// 'Fallback' on app launch.
+//   This loadscreen gives time for the app to
+//   make all the necessary fetches before rendering
+//   the landing page.
 const renderFallback = (bool) => {
   const main = document.querySelector('main');
   main.innerHTML = '';
@@ -189,28 +210,22 @@ const renderFallback = (bool) => {
   main.append(img);
 }
 
-
+// Renders the landing page.
+//   Optional argument is used to render a fallback
+//   if the app is loaded for the first time.
 const renderLanding = async (first=false) => {
-  // render a fallback
+  // Fallback render
   if (first) renderFallback(true);
-
-  // PREFETCHING
-  // show loading before rendering anything
-  // buy time for all items to be grabbed from api
+  // Fetching data...
   const categories = await fetchAllCategories();
   for (const item of categories.meals) {
     await fetchCategoryItems(item.strCategory);
   }
-
-  // if coming from details page.
+  // Render data
   initLanding();
   await renderAllCategories();
 
-
-  // attach listeners
-  // const recipeOfTheDay = document.querySelector('div#recipe-container');
-  // recipeOfTheDay.addEventListener('click', handleBannerClick);
-
+  // Initialize all the listeners for the landing page.
   const searchBox = document.querySelector('form#search-box');
   searchBox.addEventListener('submit', handleSearch);
 
@@ -226,6 +241,9 @@ const renderLanding = async (first=false) => {
   const backButton = document.querySelector('button#main-menu');
   backButton.addEventListener('click', rerenderLanding);
 
+  // Un/Hides navbar based on screen position.
+  //  In this case, only render it when the user is
+  //  scrolled to the top.
   window.onscroll = () => {
     const top = document.body.scrollTop + document.documentElement.scrollTop === 0;
     if (top) {
@@ -235,22 +253,27 @@ const renderLanding = async (first=false) => {
     }
   };
 
-  // scroll to top smoothly
+  // When rendering landing, scroll to top.
+  //   This accounts for when the saved list grows
+  //   large enough that the user has to scroll to
+  //   see their whole list. Going back to the landing
+  //   screen will automatically pull their view to the
+  //   top of the screen for convenience.
   window.scrollTo({
     top: 0,
     behavior: 'smooth'
   })
 }
 
+// Renders the items inside each category.
+//   This triggers in response to `handleCategoryExpand`.
 const renderCategoryItems = async (contentDiv, categoryLI) => {
-    console.log(contentDiv.innerHTML);
     const categoryItems = await fetchCategoryItems(categoryLI.dataset.category);
 
     const categoryItemsUL = document.createElement('ul');
     categoryItemsUL.classList.add('category-item');
     categoryItemsUL.addEventListener('click', handleRecipeClick);
 
-    console.log(categoryItems);
     for (const [index, recipe] of categoryItems.meals.entries()) {
       const li = document.createElement('li');
       li.id = index;
@@ -264,7 +287,9 @@ const renderCategoryItems = async (contentDiv, categoryLI) => {
       img.alt = recipe.strMeal;
 
       const p = document.createElement('p');
-      p.textContent = recipe.strMeal;
+      let temp = recipe.strMeal[0].toUpperCase();
+      temp += recipe.strMeal.slice(1).toLowerCase();
+      p.textContent = temp;
 
       const isSaved = checkSaved(recipe.idMeal);
       const button = document.createElement('button');
@@ -280,8 +305,7 @@ const renderCategoryItems = async (contentDiv, categoryLI) => {
     contentDiv.append(categoryItemsUL);
 }
 
-
-
+// Renders the list of categories as expandable tabs
 const renderAllCategories = async () => {
   const categoriesList = await fetchAllCategories();
   const categoriesListUL = document.querySelector('ul#categories-list')
@@ -291,27 +315,25 @@ const renderAllCategories = async () => {
     li.classList.add('category');
     li.dataset.category = category.strCategory;
 
-    // -------------- CATEGORY HEADER DIV -------------- //
     const headerDiv = document.createElement('div');
     headerDiv.classList.add('category-header');
     const headerText = document.createElement('h1');
     headerText.textContent = category.strCategory;
-    // finalize header div 
     headerDiv.append(headerText);
     li.append(headerDiv);
 
-
-    // -------------- CATEGORY CONTENT DIV -------------- //
+    // contentDiv is empty and collapsed, initially.
     const contentDiv = document.createElement('div');
     contentDiv.classList.add('category-content');
     contentDiv.classList.add('collapsed');
-    // finalize content div, collapsed, initially
-    li.append(contentDiv)
-    // finalize li into parent UL
+    li.append(contentDiv);
     categoriesListUL.append(li);
   }
 }
 
+// Conditionally renders the landing screen.
+//   This function only executes a render in response
+//   to a click that doesn't occur in the landing page.
 const rerenderLanding = async () => {
   if (document.querySelector('section#categories-section') === null) {
     const main = document.querySelector('main');
@@ -320,26 +342,9 @@ const rerenderLanding = async () => {
   }
 }
 
-// const renderAllRecipes = (allRecipes) => {
-//   const recipesUL = document.querySelector("ul#dish-catalog");
-//   recipesUL.innerHTML = '';
-//
-//   allRecipes.meals.forEach((recipe) => {
-//     const li = document.createElement("li");
-//     li.dataset.idMeal = recipe.idMeal;
-//
-//     const img = document.createElement("img");
-//     img.src = recipe.strMealThumb;
-//     img.alt = recipe.strMeal;
-//
-//     const p = document.createElement("p");
-//     p.textContent = recipe.strMeal;
-//
-//     li.append(img, p);
-//     recipesUL.append(li);
-//   });
-// };
-
+// Currenly UNUSED!
+//   Implemented at first, but in its current structure,
+//   it doesn't mesh very well with the minimalist UI.
 const renderRecipeOfTheDay = async () => {
   let recipeData = await fetchRandomRecipe();
   // TODO: should i check if recipe data is null?
@@ -363,13 +368,13 @@ const renderRecipeOfTheDay = async () => {
   section.append(div);
 };
 
+// Renders a detailed page of the recipe
+//   in response to a click on any recipe list item.
 const renderSingleRecipe = (recipeData) => {
-  // grab and clear app container
   const main = document.querySelector("main");
   main.innerHTML = "";
   main.classList.add('detailed');
 
-  // -------------- BANNER -------------- //
   const banner = document.createElement("section");
   banner.classList.add('detailed');
   banner.id = "recipe-banner";
@@ -379,19 +384,19 @@ const renderSingleRecipe = (recipeData) => {
   foodImg.src = recipeData.meals[0].strMealThumb;
   foodImg.alt = recipeData.meals[0].strMeal;
 
-  // finalize banner section
-  // banner.append(backImg, foodImg);
   banner.append(foodImg);
   main.append(banner);
 
-  // -------------- INGREDIENTS -------------- //
   const recipe = document.createElement("section");
   recipe.id = "recipe-details";
   
   const h1Div = document.createElement('div');
   h1Div.id = 'h1-div';
   const h1 = document.createElement('h1');
-  h1.textContent = recipeData.meals[0].strMeal;
+  let temp = recipeData.meals[0].strMeal[0].toUpperCase();
+  temp += recipeData.meals[0].strMeal.slice(1).toLowerCase();
+  h1.textContent = temp;
+
   h1Div.append(h1);
   recipe.append(h1Div);
 
@@ -408,12 +413,16 @@ const renderSingleRecipe = (recipeData) => {
   const ingredientsArr = [];
   // yes this is NECESSARY
   // I LOVE mealdb bro... (not)
-  for (let i = 1; i < 21; i++) {
-    // grab data, look out for errors
-    const currItem = recipeData.meals[0][`strIngredient${i}`].toLowerCase();
+
+  // The current max ingredient fields in the api is 21!
+  for (let i = 1; i < 21; i++) { 
+    // Only grab up until the ingredient field is empty.
+    let currItem = recipeData.meals[0][`strIngredient${i}`];
     if (currItem === null || currItem === "") break;
-    const currUnit = recipeData.meals[0][`strMeasure${i}`].toLowerCase();
-    if (currUnit === "") console.log(`blank currUnit: ${currUnit}`);
+    let currUnit = recipeData.meals[0][`strMeasure${i}`];
+
+    currItem = currItem.toLowerCase();
+    currUnit = currUnit.toLowerCase();
 
     const li = document.createElement("li");
     const p = document.createElement("p");
@@ -428,29 +437,12 @@ const renderSingleRecipe = (recipeData) => {
     p.append(emUnit, spanItem);
     li.append(p);
     ingredientsUl.append(li);
-    // for testing grabbing the data
-    // ingredientsArr.push({
-    //   item: currItem,
-    //   unit: currUnit
-    // })
-    console.log(`unit: ${emUnit.textContent}`);
-    console.log(`item: ${spanItem.textContent}`);
-    console.log();
   }
 
   // finalize ingredients
   ingredientsDiv.append(ingredientsH2, ingredientsUl);
   recipe.append(ingredientsDiv);
 
-  // // -------------- DIVIDER -------------- //
-  // // inside this thing is just a line divider or something
-  // const recipeDivider = document.createElement("div");
-  // recipeDivider.id = "recipe-divider";
-  //
-  // // finalize divider
-  // recipe.append(recipeDivider);
-
-  // -------------- STEPS -------------- //
   const stepsDiv = document.createElement("div");
   stepsDiv.id = "steps-div";
 
@@ -459,6 +451,9 @@ const renderSingleRecipe = (recipeData) => {
 
   const stepsOl = document.createElement("ol");
   stepsOl.id = "steps-ol";
+  // This processing does NOT cover all of API's quirks.
+  //   Some items do not use line breaks at all, or have a
+  //   step-number on an entirely different line!
   const stepsArr = recipeData.meals[0].strInstructions.split(/[\r\n]+/);
   stepsArr.forEach((step, index) => {
     if (step === '') return;
@@ -471,7 +466,6 @@ const renderSingleRecipe = (recipeData) => {
     h3.textContent = index + 1;
     p.textContent = step.slice(stepStart);
 
-    // finalize list item
     li.append(h3, p);
     stepsOl.append(li);
   });
@@ -479,17 +473,16 @@ const renderSingleRecipe = (recipeData) => {
   stepsDiv.append(stepsH2, stepsOl);
   recipe.append(stepsDiv);
 
-  // add img logo cute
+  // Adds mascot
   const logo = document.createElement('img');
   logo.id = 'cute';
   logo.src = beansIco;
   logo.alt = 'Sweet Tooth';
 
   recipe.append(logo);
-
   main.append(recipe);
 
-  // scroll to top smoothly
+  // Scroll to top smoothly
   window.scrollTo({
     top: 0,
     behavior: 'smooth'
@@ -502,12 +495,9 @@ const renderErrorToast = () => {
 
 }
 
-// -------------- MAP RENDERS -------------- //
 export {
   renderLanding,
   renderSingleRecipe,
-  // renderAllAreas,
-  // renderMap,
-  // renderMapZoom,
-  renderErrorToast
+  renderErrorToast,
+  // renderRecipeOfTheDay
 };

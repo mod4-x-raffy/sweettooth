@@ -15,17 +15,17 @@ const initSaved = () => {
   }
 }
 
+// -------------- SAVED LIST FEATURES -------------- //
 const toggleSaved = (data) => {
   initSaved();
   const currentSaved = getLocalStorage('sweettooth-saved');
   const idStr = String(data.idMeal);
-  console.log(currentSaved);
-  // if it exists, remove it
+  // If it exists, remove it
   if (currentSaved[idStr] !== undefined) {
     delete currentSaved[idStr];
     setLocalStorage('sweettooth-saved', currentSaved);
     return false;
-  // if it doesn't exist, add it
+  // If it doesn't exist, add it
   } else {
     currentSaved[idStr] = {
       strMeal: data.strMeal,
@@ -48,54 +48,17 @@ const getSaved = () => {
   return getLocalStorage('sweettooth-saved');
 }
 
+// API endpoints and external assets used.
 const categoriesURL = `https://themealdb.com/api/json/v1/1/list.php?c=list`
-const areasURL = `https://themealdb.com/api/json/v1/1/list.php?a=list`
 const categoryItemsURL = `https://themealdb.com/api/json/v1/1/filter.php?c=`;
 const detailsURL = `https://themealdb.com/api/json/v1/1/lookup.php?i=`
 const searchURL = `https://themealdb.com/api/json/v1/1/search.php?s=`
-const randomURL = `https://themealdb.com/api/json/v1/1/random.php`
-const svgPath = '/assets/world.svg';
+// const areasURL = `https://themealdb.com/api/json/v1/1/list.php?a=list`
+// const randomURL = `https://themealdb.com/api/json/v1/1/random.php`
+// const svgPath = '/assets/world.svg';
 
-
-// NOTE: API Endpoints
-// Search by name
-//   www.themealdb.com/api/json/v1/1/search.php?s=${Name}
-// Lookup by id (details)
-//   www.themealdb.com/api/json/v1/1/lookup.php?i=${idMeal}
-// Look up a random meal (details)
-// Not really needed, can just primitively randomize
-// for landing page "random" meal of the day
-//   www.themealdb.com/api/json/v1/1/random.php
-// List all categories
-//   www.themealdb.com/api/json/v1/1/list.php?c=list
-// Filter by category
-//   www.themealdb.com/api/json/v1/1/filter.php?c=${category}
-// List all areas
-//   www.themealdb.com/api/json/v1/1/list.php?a=list
-// Filter by area
-//   www.themealdb.com/api/json/v1/1/filter.php?a=${area}
-// Generate a single random meal
-//   https://www.themealdb.com/api/json/v1/1/random.php
-
-// NOTE: Recommendation Algo notes
-// Association rule learning
-//   https://en.wikipedia.org/wiki/Association_rule_learning
-// O'Reily Collective Intelligence
-//   https://www.svgator.com/blog/what-is-svg-interactivity
-
-// const fetchAllRecipes = async (category) => {
-//   try {
-//     const response = await fetch(categoryItemsURL+category);
-//     if (!response.ok) {
-//       throw new Error(`Error code ${response.status}`);
-//     }
-//     const categoryRecipes = await response.json();
-//     return categoryRecipes;
-//   } catch (error) {
-//     console.warn(error);
-//   }
-// };
-
+// Fetches all recipe categories from theMealDB.
+//   Only fetches on refresh/first load to save time.
 let categoriesList = {};
 const fetchAllCategories = async () => {
   try {
@@ -105,7 +68,6 @@ const fetchAllCategories = async () => {
       throw new Error(`Error code ${response.status}`);
     }
     categoriesList = await response.json();
-    console.log(categoriesList);
     return categoriesList;
   } catch (error) {
     console.warn(error);
@@ -114,6 +76,8 @@ const fetchAllCategories = async () => {
 }
 
 
+// Fetches all recipes under a specific category from theMealDB.
+//   Only fetches on refresh/first load to save time.
 let categoriesItems = {};
 const fetchCategoryItems = async (category) => {
   try {
@@ -130,7 +94,7 @@ const fetchCategoryItems = async (category) => {
   }
 }
 
-
+// Fetches the complete data for a single recipe using its id.
 const fetchSingleRecipe = async (id) => {
   try {
     const response = await fetch(detailsURL+id);
@@ -138,7 +102,6 @@ const fetchSingleRecipe = async (id) => {
       throw new Error(`Error code ${response.status}`);
     }
     const recipeData = await response.json();
-    console.log(recipeData);
     return recipeData;
   } catch (error) {
     console.warn(error);
@@ -146,6 +109,7 @@ const fetchSingleRecipe = async (id) => {
   }
 }
 
+// Fetches the complete data for a single recipe using its name.
 const searchRecipe = async (name) => {
   try {
     const response = await fetch(searchURL+name);
@@ -153,7 +117,6 @@ const searchRecipe = async (name) => {
       throw new Error(`Error code ${response.status}`);
     }
     const recipeData = await response.json();
-    console.log(recipeData);
     return recipeData;
   } catch (error) {
     console.warn(error);
@@ -162,6 +125,8 @@ const searchRecipe = async (name) => {
   }
 }
 
+// Fetches the complete data for a random recipe.
+//   Currently NOT implemented!
 const fetchRandomRecipe = async () => {
   try {
     const response = await fetch(randomURL);
@@ -178,17 +143,15 @@ const fetchRandomRecipe = async () => {
   }
 }
 
-// -------------- MAP FUNCTIONS -------------- //
-
 export {
   setLocalStorage,
   getLocalStorage,
   fetchSingleRecipe,
   fetchCategoryItems,
   fetchAllCategories,
-  fetchRandomRecipe,
   searchRecipe,
   toggleSaved,
   checkSaved,
   getSaved
+  // fetchRandomRecipe,
 }
